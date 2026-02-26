@@ -1,15 +1,21 @@
-# Elysia with Bun runtime
+# Apple-only GitHub OAuth (Elysia)
 
-## Getting Started
-To get started with this template, simply paste this command into your terminal:
+## Environment
+Create these environment variables before running:
+
 ```bash
-bun create elysia ./elysia-example
+GITHUB_CLIENT_ID=your_client_id
+GITHUB_CLIENT_SECRET=your_client_secret
+GITHUB_REDIRECT_URI=http://localhost:3000/auth/apple/callback
 ```
 
 ## Development
-To start the development server run:
+
 ```bash
 bun run dev
 ```
 
-Open http://localhost:3000/ with your browser to see the result.
+## Routes
+
+- `GET /auth/apple`: start Apple-only sign in through GitHub
+- `GET /auth/apple/callback`: GitHub OAuth callback
