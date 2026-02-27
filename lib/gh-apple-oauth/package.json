@@ -1,0 +1,56 @@
+{
+  "name": "gh-apple-oauth",
+  "version": "1.0.0",
+  "description": "Apple OAuth via GitHub - skip method selection, go straight to Apple sign-in. Zero dependencies, works with Node.js, Bun, Deno, and any JS/TS project.",
+  "author": "ThinhPhoenix",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ThinhPhoenix/apple-oauth.git",
+    "directory": "lib/gh-apple-oauth"
+  },
+  "keywords": [
+    "apple",
+    "oauth",
+    "github",
+    "sign-in-with-apple",
+    "apple-login",
+    "github-oauth",
+    "social-login",
+    "authentication"
+  ],
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "prepublishOnly": "npm run build"
+  },
+  "devDependencies": {
+    "tsup": "^8.0.0",
+    "typescript": "^5.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "sideEffects": false
+}

@@ -1,11 +1,5 @@
 import { Elysia } from "elysia";
-import {
-  buildGithubAppleInitiateUrl,
-  buildGithubAuthorizePath,
-  createOauthState,
-  exchangeGithubCodeForToken,
-  fetchGithubProfile,
-} from "./apple-oauth.handler";
+import { createOAuthClient } from "./apple-oauth.handler";
 import { githubCallbackQueryDto } from "./dto/github-callback-query.dto";
 
 const oauthStateMaxAgeSeconds = 60 * 10;
@@ -13,19 +7,17 @@ const oauthStateMaxAgeSeconds = 60 * 10;
 export const appleOauthRoute = new Elysia({ prefix: "/auth" })
   .get("/apple", ({ cookie, redirect, status }) => {
     try {
-      const oauthState = createOauthState();
+      const auth = createOAuthClient();
+      const { url, state } = auth.createAuthUrl();
 
-      cookie.ghOAuthState.value = oauthState;
+      cookie.ghOAuthState.value = state;
       cookie.ghOAuthState.httpOnly = true;
       cookie.ghOAuthState.sameSite = "lax";
       cookie.ghOAuthState.secure = process.env.NODE_ENV === "production";
       cookie.ghOAuthState.path = "/";
       cookie.ghOAuthState.maxAge = oauthStateMaxAgeSeconds;
 
-      const authorizePath = buildGithubAuthorizePath(oauthState);
-      const appleInitUrl = buildGithubAppleInitiateUrl(authorizePath);
-
-      return redirect(appleInitUrl, 302);
+      return redirect(url, 302);
     } catch (error) {
       return status(500, {
         error: "server_misconfigured",
@@ -66,14 +58,14 @@ export const appleOauthRoute = new Elysia({ prefix: "/auth" })
       cookie.ghOAuthState.remove();
 
       try {
-        const accessToken = await exchangeGithubCodeForToken(query.code);
-        const githubProfile = await fetchGithubProfile(accessToken);
+        const auth = createOAuthClient();
+        const result = await auth.authenticate(query.code);
 
         return {
-          provider: "github",
-          method: "apple",
-          user: githubProfile.user,
-          emails: githubProfile.emails,
+          provider: result.provider,
+          method: result.method,
+          user: result.user,
+          emails: result.emails,
         };
       } catch (error) {
         return status(400, {

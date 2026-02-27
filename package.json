@@ -6,7 +6,8 @@
     "dev": "bun run --watch src/index.ts"
   },
   "dependencies": {
-    "elysia": "latest"
+    "elysia": "latest",
+    "gh-apple-oauth": "file:./lib/gh-apple-oauth"
   },
   "devDependencies": {
     "bun-types": "latest"

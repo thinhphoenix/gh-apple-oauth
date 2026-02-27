@@ -39,3 +39,9 @@ yarn-error.log*
 **/*.log
 package-lock.json
 **/*.bun
+
+# lib build output
+lib/*/dist/
+lib/*/node_modules/
+lib/*/*.lock
+lib/*/bun.lock
